@@ -13,7 +13,7 @@ class AlbumsService {
     const updatedAt = createdAt;
 
     const newAlbum = {
-      id,
+      id, 
       name,
       year,
       createdAt,

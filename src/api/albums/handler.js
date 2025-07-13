@@ -11,7 +11,7 @@ class AlbumsHandler {
     try {
       this._validator.validateAlbumPayload(request.payload);
       const { name, year } = request.payload;
-      const albumId = this._service.addAlbum({ name, year });
+      const albumId = await this._service.addAlbum({ name, year });
 
       const response = h.response({
         status: "success",
@@ -28,13 +28,13 @@ class AlbumsHandler {
         status: "fail",
         message: error.message,
       });
-      response.code(400);
+      response.code(error.statusCode || 500);
       return response;
     }
   }
 
   async getAlbumsHandler() {
-    const albums = this._service.getAlbums();
+    const albums = await this._service.getAlbums();
     return {
       status: "success",
       data: {
