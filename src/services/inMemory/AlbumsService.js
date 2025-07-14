@@ -1,4 +1,4 @@
-const { nanoid } = require('nanoid/non-secure');
+const { nanoid } = require('nanoid');
 const InvariantError = require('../../api/exeptions/InvariantError');
 const NotFoundError = require('../../api/exeptions/NotFoundError');
 
