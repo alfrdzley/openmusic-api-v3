@@ -33,19 +33,18 @@ class AlbumsService {
   async getAlbumById(id) {
     const query = {
       text: "SELECT * FROM albums WHERE id = $1",
-      values: [id],
+      values: id ? [id] : [],
     };
-
     const result = await this._pool.query(query);
     if (!result.rows.length) {
-      throw new Error("Album tidak ditemukan");
+      throw new NotFoundError("Album tidak ditemukan");
     }
-    return result.rows[0];
+    return AlbumsMapDB(result.rows[0]);
   }
 
   async editAlbumById(id, { name, year }) {
     const query = {
-      text: "UPDATE albums SET name = $1, year = $2 WHERE id = $3 RETURNING id",
+      text: "UPDATE albums SET name = $1, year = $2 WHERE id = $3 RETURNING *",
       values: [name, year, id],
     };
 
@@ -53,6 +52,7 @@ class AlbumsService {
     if (!result.rows.length) {
       throw new NotFoundError("Gagal memperbarui album. Id tidak ditemukan");
     }
+    return AlbumsMapDB(result.rows[0]);
   }
 
   async deleteAlbumById(id) {
@@ -66,6 +66,8 @@ class AlbumsService {
     if (!result.rows.length) {
       throw new NotFoundError("Album gagal dihapus. Id tidak ditemukan");
     }
+
+    return AlbumsMapDB(result.rows[0]);
   }
 }
 

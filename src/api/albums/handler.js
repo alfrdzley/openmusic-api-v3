@@ -4,6 +4,7 @@ class AlbumsHandler {
   constructor(service, validator) {
     this._service = service;
     this._validator = validator;
+
     autoBind(this);
   }
 
@@ -22,7 +23,6 @@ class AlbumsHandler {
       });
       response.code(201);
       return response;
-
     } catch (error) {
       const response = h.response({
         status: "fail",
@@ -46,7 +46,7 @@ class AlbumsHandler {
   async getAlbumByIdHandler(request, h) {
     try {
       const { id } = request.params;
-      const album = this._service.getAlbumById(id);
+      const album = await this._service.getAlbumById(id);
 
       return {
         status: "success",
