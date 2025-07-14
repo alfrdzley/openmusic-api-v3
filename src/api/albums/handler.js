@@ -1,4 +1,4 @@
-const autoBind = require("auto-bind");
+const autoBind = require('auto-bind');
 
 class AlbumsHandler {
   constructor(service, validator) {
@@ -15,8 +15,8 @@ class AlbumsHandler {
       const albumId = await this._service.addAlbum({ name, year });
 
       const response = h.response({
-        status: "success",
-        message: "Album berhasil ditambahkan",
+        status: 'success',
+        message: 'Album berhasil ditambahkan',
         data: {
           albumId,
         },
@@ -25,7 +25,7 @@ class AlbumsHandler {
       return response;
     } catch (error) {
       const response = h.response({
-        status: "fail",
+        status: 'fail',
         message: error.message,
       });
       response.code(error.statusCode || 500);
@@ -36,7 +36,7 @@ class AlbumsHandler {
   async getAlbumsHandler() {
     const albums = await this._service.getAlbums();
     return {
-      status: "success",
+      status: 'success',
       data: {
         albums,
       },
@@ -49,14 +49,14 @@ class AlbumsHandler {
       const album = await this._service.getAlbumById(id);
 
       return {
-        status: "success",
+        status: 'success',
         data: {
           album,
         },
       };
     } catch (error) {
       const response = h.response({
-        status: "fail",
+        status: 'fail',
         message: error.message,
       });
       response.code(error.statusCode || 500);
@@ -70,15 +70,15 @@ class AlbumsHandler {
       const { id } = request.params;
       const { name, year } = request.payload;
 
-      this._service.editAlbumById(id, { name, year });
+      await this._service.editAlbumById(id, { name, year });
 
       return {
-        status: "success",
-        message: "Album berhasil diperbarui",
+        status: 'success',
+        message: 'Album berhasil diperbarui',
       };
     } catch (error) {
       const response = h.response({
-        status: "fail",
+        status: 'fail',
         message: error.message,
       });
       response.code(error.statusCode || 500);
@@ -89,15 +89,15 @@ class AlbumsHandler {
   async deleteAlbumByIdHandler(request, h) {
     try {
       const { id } = request.params;
-      this._service.deleteAlbumById(id);
+      await this._service.deleteAlbumById(id);
 
       return {
-        status: "success",
-        message: "Album berhasil dihapus",
+        status: 'success',
+        message: 'Album berhasil dihapus',
       };
     } catch (error) {
       const response = h.response({
-        status: "fail",
+        status: 'fail',
         message: error.message,
       });
       response.code(error.statusCode || 500);

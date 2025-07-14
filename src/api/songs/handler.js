@@ -1,5 +1,4 @@
-const autoBind = require("auto-bind");
-const ClientError = require("../../api/exeptions/ClientError");
+const autoBind = require('auto-bind');
 
 class SongsHandler {
   constructor(service, validator) {
@@ -12,8 +11,9 @@ class SongsHandler {
   async postSongHandler(request, h) {
     try {
       this._validator.validateSongPayload(request.payload);
-      const { title, year, performer, genre, duration, albumId } =
-        request.payload;
+      const {
+        title, year, performer, genre, duration, albumId,
+      } = request.payload;
       const songId = await this._service.addSong({
         title,
         year,
@@ -24,8 +24,8 @@ class SongsHandler {
       });
 
       const response = h.response({
-        status: "success",
-        message: "Song Berhasil ditambahkan",
+        status: 'success',
+        message: 'Song Berhasil ditambahkan',
         data: {
           songId,
         },
@@ -33,29 +33,36 @@ class SongsHandler {
       response.code(201);
       return response;
     } catch (error) {
-      if (error instanceof ClientError) {
-        const response = h.response({
-          status: "fail",
-          message: error.message,
-        });
-        response.code(error.statusCode);
-        return response;
-      }
+      const response = h.response({
+        status: 'fail',
+        message: error.message,
+      });
+      response.code(error.statusCode || 500);
+      return response;
     }
   }
 
-  async getSongsHandler() {
-    const params = request.query;
-    const songs = await this._service.getSongs(params);
-    return {
-      status: 'success',
-      data: {
-        songs: songs.map(song => ({
-          id: song.id,
-          title: song.title,
-          performer: song.performer,
-        }))
-      }
+  async getSongsHandler(request, h) {
+    try {
+      const params = request.query;
+      const songs = await this._service.getSongs(params);
+      return {
+        status: 'success',
+        data: {
+          songs: songs.map((song) => ({
+            id: song.id,
+            title: song.title,
+            performer: song.performer,
+          })),
+        },
+      };
+    } catch (error) {
+      const response = h.response({
+        status: 'fail',
+        message: error.message,
+      });
+      response.code(error.statusCode || 500);
+      return response;
     }
   }
 
@@ -65,14 +72,14 @@ class SongsHandler {
       const song = await this._service.getSongById(id);
 
       return {
-        status: "success",
+        status: 'success',
         data: {
           song,
         },
       };
     } catch (error) {
       const response = h.response({
-        status: "fail",
+        status: 'fail',
         message: error.message,
       });
       response.code(error.statusCode || 500);
@@ -84,7 +91,9 @@ class SongsHandler {
     try {
       const { id } = request.params;
       this._validator.validateSongPayload(request.payload);
-      const { title, year, performer, genre, duration } = request.payload;
+      const {
+        title, year, performer, genre, duration,
+      } = request.payload;
 
       await this._service.editSongById(id, {
         title,
@@ -95,12 +104,12 @@ class SongsHandler {
       });
 
       return {
-        status: "success",
-        message: "Song updated successfully",
+        status: 'success',
+        message: 'Song berhasil diperbarui',
       };
     } catch (error) {
       const response = h.response({
-        status: "fail",
+        status: 'fail',
         message: error.message,
       });
       response.code(error.statusCode || 500);
@@ -114,14 +123,14 @@ class SongsHandler {
       await this._service.deleteSongById(id);
 
       const response = h.response({
-        status: "success",
-        message: "Song deleted successfully",
+        status: 'success',
+        message: 'Song berhasil dihapus',
       });
       response.code(200);
       return response;
     } catch (error) {
       const response = h.response({
-        status: "fail",
+        status: 'fail',
         message: error.message,
       });
       response.code(error.statusCode || 500);

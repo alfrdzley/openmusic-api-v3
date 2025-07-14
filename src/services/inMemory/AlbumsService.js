@@ -1,6 +1,6 @@
-const { nanoid } = require("nanoid/non-secure");
-const InvariantError = require("../../api/exeptions/InvariantError");
-const NotFoundError = require("../../api/exeptions/NotFoundError");
+const { nanoid } = require('nanoid/non-secure');
+const InvariantError = require('../../api/exeptions/InvariantError');
+const NotFoundError = require('../../api/exeptions/NotFoundError');
 
 class AlbumsService {
   constructor() {
@@ -13,7 +13,7 @@ class AlbumsService {
     const updatedAt = createdAt;
 
     const newAlbum = {
-      id, 
+      id,
       name,
       year,
       createdAt,
@@ -22,22 +22,21 @@ class AlbumsService {
 
     this._albums.push(newAlbum);
 
-    const isSuccess =
-      this._albums.filter((album) => album.id === id).length > 0;
+    const isSuccess = this._albums.filter((album) => album.id === id).length > 0;
     if (!isSuccess) {
-      throw new InvariantError("Album gagal ditambahkan");
+      throw new InvariantError('Album gagal ditambahkan');
     }
     return id;
   }
-  
+
   getAlbums() {
     return this._albums;
   }
 
   getAlbumById(id) {
-    const album = this._albums.filter((album) => album.id === id)[0];
+    const album = this._albums.filter((item) => item.id === id)[0];
     if (!album) {
-      throw new NotFoundError("Album tidak ditemukan");
+      throw new NotFoundError('Album tidak ditemukan');
     }
     return album;
   }
@@ -45,7 +44,7 @@ class AlbumsService {
   editAlbumById(id, { name, year }) {
     const index = this._albums.findIndex((album) => album.id === id);
     if (index === -1) {
-      throw new NotFoundError("Gagal memperbarui album. Id tidak ditemukan");
+      throw new NotFoundError('Gagal memperbarui album. Id tidak ditemukan');
     }
 
     const updatedAt = new Date().toISOString();
@@ -62,11 +61,11 @@ class AlbumsService {
   deleteAlbumById(id) {
     const index = this._albums.findIndex((album) => album.id === id);
     if (index === -1) {
-      throw new NotFoundError("Album gagal dihapus. Id tidak ditemukan");
+      throw new NotFoundError('Album gagal dihapus. Id tidak ditemukan');
     }
 
     this._albums.splice(index, 1);
-    return { message: "Album berhasil dihapus" };
+    return { message: 'Album berhasil dihapus' };
   }
 }
 
