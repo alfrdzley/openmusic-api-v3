@@ -1,4 +1,4 @@
-const UserPayloadSchema = require('./schema');
+const { UserPayloadSchema } = require('./schema');
 const InvariantError = require('../../exeptions/InvariantError');
 
 const UsersValidator = {
@@ -10,4 +10,4 @@ const UsersValidator = {
   },
 };
 
-module.exports = { UsersValidator };
+module.exports = UsersValidator;

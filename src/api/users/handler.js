@@ -32,22 +32,30 @@ class UsersHandler {
         status: 'fail',
         message: error.message,
       });
-      response.code(400);
+      response.code(error.statusCode || 500);
       return response;
     }
   }
 
-  async getUserByIdHandler(request) {
-    const { id } = request.params;
+  async getUserByIdHandler(request, h) {
+    try {
+      const { id } = request.params;
+      const user = await this._service.getUserById(id);
 
-    const user = await this._service.getUserById(id);
-
-    return {
-      status: 'success',
-      data: {
-        user,
-      },
-    };
+      return {
+        status: 'success',
+        data: {
+          user,
+        },
+      };
+    } catch (error) {
+      const response = h.response({
+        status: 'fail',
+        message: error.message,
+      });
+      response.code(error.statusCode || 500);
+      return response;
+    }
   }
 }
 
