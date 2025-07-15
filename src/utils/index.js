@@ -1,5 +1,9 @@
 const AlbumsMapDB = ({
-  id, name, year, created_at: createdAt, updated_at: updatedAt,
+  id,
+  name,
+  year,
+  created_at: createdAt,
+  updated_at: updatedAt,
 }) => ({
   id,
   name,

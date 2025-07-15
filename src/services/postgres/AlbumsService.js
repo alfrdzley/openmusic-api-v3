@@ -1,4 +1,4 @@
-const  { nanoid }  = require('nanoid');
+const { nanoid } = require('nanoid');
 const { Pool } = require('pg');
 const NotFoundError = require('../../api/exeptions/NotFoundError');
 const InvariantError = require('../../api/exeptions/InvariantError');

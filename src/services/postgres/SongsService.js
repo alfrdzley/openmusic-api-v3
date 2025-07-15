@@ -4,7 +4,7 @@ const NotFoundError = require('../../api/exeptions/NotFoundError');
 const InvariantError = require('../../api/exeptions/InvariantError');
 const { SongsMapDB } = require('../../utils');
 
-class SongService {
+class SongsService {
   constructor() {
     this._pool = new Pool();
   }
@@ -104,4 +104,4 @@ class SongService {
   }
 }
 
-module.exports = SongService;
+module.exports = SongsService;

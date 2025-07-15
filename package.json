@@ -1,9 +1,8 @@
 {
   "name": "openmusic-api-v1",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Submission: Proyek OpenMusic API versi 1",
   "main": "./src/server.js",
-
   "scripts": {
     "start": "node ./src/server.js",
     "start:dev": "nodemon ./src/server.js",
@@ -22,6 +21,7 @@
   "dependencies": {
     "@hapi/hapi": "^21.4.0",
     "auto-bind": "^4.0.0",
+    "bcrypt": "^6.0.0",
     "dotenv": "^17.2.0",
     "joi": "^17.13.3",
     "nanoid": "^5.1.5",
