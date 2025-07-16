@@ -1,4 +1,4 @@
-const autoBind = require("auto-bind");
+const autoBind = require('auto-bind');
 
 class AuthenticationsHandler {
   constructor(authenticationsService, usersService, tokenManager, validator) {
@@ -15,7 +15,10 @@ class AuthenticationsHandler {
       this._validator.validatePostAuthenticationPayload(request.payload);
 
       const { username, password } = request.payload;
-      const id = await this._usersService.verifyUserCredential(username, password);
+      const id = await this._usersService.verifyUserCredential(
+        username,
+        password,
+      );
 
       const accessToken = this._tokenManager.generateAccessToken({ id });
       const refreshToken = this._tokenManager.generateRefreshToken({ id });
@@ -26,10 +29,10 @@ class AuthenticationsHandler {
         status: 'success',
         data: {
           accessToken,
-          refreshToken
-        }
+          refreshToken,
+        },
       });
-      response.code(201); 
+      response.code(201);
       return response;
     } catch (error) {
       const response = h.response({
@@ -55,7 +58,7 @@ class AuthenticationsHandler {
         status: 'success',
         data: {
           accessToken,
-        }
+        },
       };
     } catch (error) {
       const response = h.response({
