@@ -1,6 +1,6 @@
 const { nanoid } = require('nanoid');
-const InvariantError = require('../../api/exeptions/InvariantError');
-const NotFoundError = require('../../api/exeptions/NotFoundError');
+const InvariantError = require('../../exeptions/InvariantError');
+const NotFoundError = require('../../exeptions/NotFoundError');
 
 class AlbumsService {
   constructor() {

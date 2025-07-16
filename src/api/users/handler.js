@@ -1,4 +1,4 @@
-const autoBind = require('auto-bind');
+const autoBind = require("auto-bind");
 
 class UsersHandler {
   constructor(service, validator) {
@@ -19,8 +19,8 @@ class UsersHandler {
       });
 
       const response = h.response({
-        status: 'success',
-        message: 'User berhasil ditambahkan',
+        status: "success",
+        message: "User berhasil ditambahkan",
         data: {
           userId,
         },
@@ -29,7 +29,7 @@ class UsersHandler {
       return response;
     } catch (error) {
       const response = h.response({
-        status: 'fail',
+        status: "fail",
         message: error.message,
       });
       response.code(error.statusCode || 500);
@@ -43,14 +43,14 @@ class UsersHandler {
       const user = await this._service.getUserById(id);
 
       return {
-        status: 'success',
+        status: "success",
         data: {
           user,
         },
       };
     } catch (error) {
       const response = h.response({
-        status: 'fail',
+        status: "fail",
         message: error.message,
       });
       response.code(error.statusCode || 500);
