@@ -1,7 +1,7 @@
 {
   "name": "openmusic-api-v1",
   "version": "2.0.0",
-  "description": "Submission: Proyek OpenMusic API versi 1",
+  "description": "Submission: Proyek OpenMusic API versi 2",
   "main": "./src/server.js",
   "scripts": {
     "start": "node ./src/server.js",

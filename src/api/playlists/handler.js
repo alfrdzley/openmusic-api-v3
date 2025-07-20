@@ -1,4 +1,4 @@
-const autoBind = require("auto-bind");
+const autoBind = require('auto-bind');
 
 class PlaylistsHandler {
   constructor(service, validator, playlistSongsValidator) {
@@ -21,8 +21,8 @@ class PlaylistsHandler {
       });
 
       const response = h.response({
-        status: "success",
-        message: "Playlist berhasil ditambahkan",
+        status: 'success',
+        message: 'Playlist berhasil ditambahkan',
         data: {
           playlistId,
         },
@@ -31,11 +31,10 @@ class PlaylistsHandler {
       return response;
     } catch (error) {
       const response = h.response({
-        status: "fail",
-        message: error.message,
+        status: 'fail',
+        message: 'Gagal menambahkan playlist',
       });
       response.code(error.statusCode || 500);
-      response.type("application/json");
       return response;
     }
   }
@@ -46,18 +45,17 @@ class PlaylistsHandler {
       const playlists = await this._service.getPlaylists(credentialId);
 
       return {
-        status: "success",
+        status: 'success',
         data: {
           playlists,
         },
       };
     } catch (error) {
       const response = h.response({
-        status: "fail",
-        message: error.message,
+        status: 'fail',
+        message: 'Gagal mendapatkan daftar playlist',
       });
       response.code(error.statusCode || 500);
-      response.type("application/json");
       return response;
     }
   }
@@ -71,16 +69,15 @@ class PlaylistsHandler {
       await this._service.deletePlaylistById(id);
 
       return {
-        status: "success",
-        message: "Playlist berhasil dihapus",
+        status: 'success',
+        message: 'Playlist berhasil dihapus',
       };
     } catch (error) {
       const response = h.response({
-        status: "fail",
-        message: error.message,
+        status: 'fail',
+        message: 'Gagal menghapus playlist. Id tidak ditemukan',
       });
       response.code(error.statusCode || 500);
-      response.type("application/json");
       return response;
     }
   }
@@ -92,22 +89,22 @@ class PlaylistsHandler {
       const { songId } = request.payload;
       const { id: credentialId } = request.auth.credentials;
 
-      await this._service.verifyPlaylistOwner(playlistId, credentialId);
+      await this._service.verifyPlaylistAccess(playlistId, credentialId);
       await this._service.addSongToPlaylist(playlistId, songId);
+      await this._service.addActivity(playlistId, songId, credentialId, 'add');
 
       const response = h.response({
-        status: "success",
-        message: "Lagu berhasil ditambahkan ke playlist",
+        status: 'success',
+        message: 'Lagu berhasil ditambahkan ke playlist',
       });
       response.code(201);
       return response;
     } catch (error) {
       const response = h.response({
-        status: "fail",
-        message: error.message,
+        status: 'fail',
+        message: 'Gagal menambahkan lagu ke playlist. Id tidak ditemukan',
       });
       response.code(error.statusCode || 500);
-      response.type("application/json");
       return response;
     }
   }
@@ -117,20 +114,19 @@ class PlaylistsHandler {
       const { id: playlistId } = request.params;
       const { id: credentialId } = request.auth.credentials;
 
-      await this._service.verifyPlaylistOwner(playlistId, credentialId);
+      await this._service.verifyPlaylistAccess(playlistId, credentialId);
       const result = await this._service.getPlaylistSongs(playlistId);
 
       return {
-        status: "success",
+        status: 'success',
         data: result,
       };
     } catch (error) {
       const response = h.response({
-        status: "fail",
+        status: 'fail',
         message: error.message,
       });
       response.code(error.statusCode || 500);
-      response.type("application/json");
       return response;
     }
   }
@@ -142,41 +138,48 @@ class PlaylistsHandler {
       const { songId } = request.payload;
       const { id: credentialId } = request.auth.credentials;
 
-      await this._service.verifyPlaylistOwner(playlistId, credentialId);
+      await this._service.verifyPlaylistAccess(playlistId, credentialId);
       await this._service.deleteSongFromPlaylist(playlistId, songId);
+      await this._service.addActivity(
+        playlistId,
+        songId,
+        credentialId,
+        'delete',
+      );
 
       return {
-        status: "success",
-        message: "Lagu berhasil dihapus dari playlist",
+        status: 'success',
+        message: 'Lagu berhasil dihapus dari playlist',
       };
     } catch (error) {
       const response = h.response({
-        status: "fail",
-        message: error.message,
+        status: 'fail',
+        message: 'Gagal menghapus lagu dari playlist. Id tidak ditemukan',
       });
       response.code(error.statusCode || 500);
-      response.type("application/json");
       return response;
     }
   }
 
-  async cleanupPlaylistsHandler(request, h) {
+  async getPlaylistActivitiesHandler(request, h) {
     try {
-      const songDeleteResult = await this._service.cleanupPlaylistSongsDebug();
-      const playlistDeleteResult = await this._service.cleanupPlaylistsDebug();
+      const { id: playlistId } = request.params;
+      const { id: credentialId } = request.auth.credentials;
+
+      await this._service.verifyPlaylistAccess(playlistId, credentialId);
+      const activities = await this._service.getPlaylistActivities(playlistId);
 
       return {
-        status: "success",
-        message: `Cleanup completed: ${songDeleteResult.rows.length} playlist songs and ${playlistDeleteResult.rows.length} playlists deleted`,
+        status: 'success',
         data: {
-          deletedPlaylistSongs: songDeleteResult.rows.length,
-          deletedPlaylists: playlistDeleteResult.rows.length,
+          playlistId,
+          activities,
         },
       };
     } catch (error) {
       const response = h.response({
-        status: "fail",
-        message: error.message,
+        status: 'fail',
+        message: 'Gagal mendapatkan aktivitas playlist',
       });
       response.code(error.statusCode || 500);
       return response;
