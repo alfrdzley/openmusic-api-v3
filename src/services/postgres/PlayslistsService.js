@@ -72,9 +72,9 @@ class PlaylistsService {
       text: 'UPDATE playlists SET name = $1, updated_at = $2 WHERE id = $3 RETURNING id',
       values: [name, updatedAt, id],
     };
-
-    const result = await this._pool.query(query);
-    if (!result.rows.length) {
+    
+    const { rowCount } = await this._pool.query(query);
+    if (!rowCount) {
       throw new NotFoundError('Gagal memperbarui playlist. Id tidak ditemukan');
     }
   }
