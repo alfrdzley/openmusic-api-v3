@@ -29,14 +29,23 @@ exports.up = (pgm) => {
     },
   });
 
-  pgm.addConstraint('playlist_collaborations', 'fk_playlist_collaborations.playlist_id_playlists.id', 
-    'FOREIGN KEY(playlist_id) REFERENCES playlists(id) ON DELETE CASCADE');
-  
-  pgm.addConstraint('playlist_collaborations', 'fk_playlist_collaborations.user_id_users.id', 
-    'FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE');
-  
-  pgm.addConstraint('playlist_collaborations', 'unique_playlist_collaboration', 
-    'UNIQUE(playlist_id, user_id)');
+  pgm.addConstraint(
+    'playlist_collaborations',
+    'fk_playlist_collaborations.playlist_id_playlists.id',
+    'FOREIGN KEY(playlist_id) REFERENCES playlists(id) ON DELETE CASCADE',
+  );
+
+  pgm.addConstraint(
+    'playlist_collaborations',
+    'fk_playlist_collaborations.user_id_users.id',
+    'FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE',
+  );
+
+  pgm.addConstraint(
+    'playlist_collaborations',
+    'unique_playlist_collaboration',
+    'UNIQUE(playlist_id, user_id)',
+  );
 };
 
 /**

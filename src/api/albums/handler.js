@@ -113,7 +113,7 @@ class AlbumsHandler {
   async postUploadCoverHandler(request, h) {
     try {
       const { cover } = request.payload;
-      const { id } = request.params; 
+      const { id } = request.params;
 
       if (!cover) {
         return h
@@ -132,7 +132,8 @@ class AlbumsHandler {
         return h
           .response({
             status: 'fail',
-            message: 'Payload content length greater than maximum allowed: 512000',
+            message:
+              'Payload content length greater than maximum allowed: 512000',
           })
           .code(413)
           .type('application/json');
@@ -161,6 +162,79 @@ class AlbumsHandler {
         })
         .code(error.statusCode || 500)
         .type('application/json');
+    }
+  }
+
+  async postAlbumLikesHandler(request, h) {
+    try {
+      const { id: albumId } = request.params;
+      const { id: userId } = request.auth.credentials;
+
+      await this._albumsService.postLikeAlbum(albumId, userId);
+
+      const response = h.response({
+        status: 'success',
+        message: 'Berhasil menambahkan like pada album',
+      });
+      response.code(201);
+      return response;
+    } catch (error) {
+      const response = h.response({
+        status: 'fail',
+        message: error.message,
+      });
+      response.code(error.statusCode || 500);
+      return response;
+    }
+  }
+
+  async getAlbumLikesHandler(request, h) {
+    try {
+      const { id: albumId } = request.params;
+      const likesData = await this._albumsService.getLikesCountByAlbumId(albumId);
+
+      const response = h.response({
+        status: 'success',
+        data: {
+          likes: likesData.count || likesData, // Handle both object and number response
+        },
+      });
+
+      // ✅ Set X-Data-Source header based on data source
+      if (likesData.source === 'cache') {
+        response.header('X-Data-Source', 'cache');
+      }
+
+      return response;
+    } catch (error) {
+      const response = h.response({
+        status: 'fail',
+        message: error.message,
+      });
+      response.code(error.statusCode || 500);
+      return response;
+    }
+  }
+
+  async deleteAlbumLikesHandler(request, h) {
+    try {
+      const { id: albumId } = request.params;
+      const { id: userId } = request.auth.credentials;
+
+      await this._albumsService.deleteLikeAlbum(albumId, userId);
+
+      const response = h.response({
+        status: 'success',
+        message: 'Berhasil membatalkan like pada album',
+      });
+      return response;
+    } catch (error) {
+      const response = h.response({
+        status: 'fail',
+        message: error.message,
+      });
+      response.code(error.statusCode || 500);
+      return response;
     }
   }
 }
