@@ -50,9 +50,6 @@ class AlbumsHandler {
       const { id } = request.params;
       const album = await this._albumsService.getAlbumById(id);
 
-      // ✅ Fix: coverUrl sudah ter-map dari AlbumsMapDB di utils
-      // Tidak perlu manipulasi manual karena coverUrl sudah ada dari database
-
       const response = h.response({
         status: 'success',
         data: {
@@ -116,9 +113,8 @@ class AlbumsHandler {
   async postUploadCoverHandler(request, h) {
     try {
       const { cover } = request.payload;
-      const { id } = request.params; // ✅ Fix: Parameter konsisten dengan route lain
+      const { id } = request.params; 
 
-      // 1. Validasi file ada
       if (!cover) {
         return h
           .response({
@@ -129,10 +125,8 @@ class AlbumsHandler {
           .type('application/json');
       }
 
-      // 2. Validasi MIME type
       this._uploadsValidator.validateImageHeaders(cover.hapi.headers);
 
-      // 3. Validasi ukuran file maksimal 512000 bytes
       const fileSize = cover.hapi.headers['content-length'] || 0;
       if (fileSize > 512000) {
         return h
@@ -144,16 +138,12 @@ class AlbumsHandler {
           .type('application/json');
       }
 
-      // 4. Simpan file ke storage
       const filename = await this._storageService.writeFile(cover, cover.hapi);
 
-      // 5. Buat URL yang dapat diakses publik
       const fileLocation = `http://${process.env.HOST}:${process.env.PORT}/upload/images/${filename}`;
 
-      // 6. ✅ CRITICAL: Update database dengan cover URL
       await this._albumsService.editAlbumCoverById(id, fileLocation);
 
-      // 7. Return response sesuai spesifikasi
       return h
         .response({
           status: 'success',
