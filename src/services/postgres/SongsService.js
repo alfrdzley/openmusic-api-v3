@@ -1,7 +1,7 @@
 const { nanoid } = require('nanoid/non-secure');
 const { Pool } = require('pg');
-const NotFoundError = require('../../exeptions/NotFoundError');
-const InvariantError = require('../../exeptions/InvariantError');
+const NotFoundError = require('../../exceptions/NotFoundError');
+const InvariantError = require('../../exceptions/InvariantError');
 const { SongsMapDB } = require('../../utils');
 
 class SongsService {

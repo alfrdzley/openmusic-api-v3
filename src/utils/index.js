@@ -2,12 +2,14 @@ const AlbumsMapDB = ({
   id,
   name,
   year,
+  cover_url: coverUrl,
   created_at: createdAt,
   updated_at: updatedAt,
 }) => ({
   id,
   name,
   year,
+  coverUrl,
   createdAt,
   updatedAt,
 });

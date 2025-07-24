@@ -1,6 +1,6 @@
 const { nanoid } = require('nanoid/non-secure');
-const InvariantError = require('../../exeptions/InvariantError');
-const NotFoundError = require('../../exeptions/NotFoundError');
+const InvariantError = require('../../exceptions/InvariantError');
+const NotFoundError = require('../../exceptions/NotFoundError');
 
 class SongService {
   constructor() {

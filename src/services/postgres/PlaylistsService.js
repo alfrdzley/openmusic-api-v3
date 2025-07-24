@@ -1,9 +1,9 @@
 const { Pool } = require('pg');
 const { nanoid } = require('nanoid');
-const InvariantError = require('../../exeptions/InvariantError');
-const NotFoundError = require('../../exeptions/NotFoundError');
-const AuthenticationError = require('../../exeptions/AuthenticationError');
-const AuthorizationError = require('../../exeptions/AuthorizationError');
+const InvariantError = require('../../exceptions/InvariantError');
+const NotFoundError = require('../../exceptions/NotFoundError');
+const AuthenticationError = require('../../exceptions/AuthenticationError');
+const AuthorizationError = require('../../exceptions/AuthorizationError');
 
 class PlaylistsService {
   constructor(collaborationsService) {
@@ -72,7 +72,7 @@ class PlaylistsService {
       text: 'UPDATE playlists SET name = $1, updated_at = $2 WHERE id = $3 RETURNING id',
       values: [name, updatedAt, id],
     };
-    
+
     const { rowCount } = await this._pool.query(query);
     if (!rowCount) {
       throw new NotFoundError('Gagal memperbarui playlist. Id tidak ditemukan');

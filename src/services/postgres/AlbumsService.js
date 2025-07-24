@@ -1,7 +1,7 @@
 const { nanoid } = require('nanoid');
 const { Pool } = require('pg');
-const NotFoundError = require('../../exeptions/NotFoundError');
-const InvariantError = require('../../exeptions/InvariantError');
+const NotFoundError = require('../../exceptions/NotFoundError');
+const InvariantError = require('../../exceptions/InvariantError');
 const { AlbumsMapDB } = require('../../utils');
 
 class AlbumsService {
@@ -12,11 +12,10 @@ class AlbumsService {
   async addAlbum({ name, year }) {
     const id = nanoid(16);
     const createdAt = new Date().toISOString();
-    const updatedAt = createdAt;
 
     const query = {
       text: 'INSERT INTO albums (id, name, year, created_at, updated_at) VALUES($1, $2, $3, $4, $5) RETURNING id',
-      values: [id, name, year, createdAt, updatedAt],
+      values: [id, name, year, createdAt, createdAt],
     };
 
     const result = await this._pool.query(query);
@@ -82,6 +81,20 @@ class AlbumsService {
     }
 
     return { message: 'Album berhasil dihapus' };
+  }
+
+  async editAlbumCoverById(id, coverUrl) {
+    const updatedAt = new Date().toISOString();
+
+    const query = {
+      text: 'UPDATE albums SET cover_url = $1, updated_at = $2 WHERE id = $3 RETURNING id',
+      values: [coverUrl, updatedAt, id],
+    };
+
+    const result = await this._pool.query(query);
+    if (!result.rows.length) {
+      throw new NotFoundError('Gagal memperbarui cover album. Id tidak ditemukan');
+    }
   }
 }
 

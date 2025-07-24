@@ -1,3 +1,8 @@
 node_modules
 .env
 .vscode
+.idea
+.eslintrc.js
+
+.DS_Store
+src/api/albums/file/covers
